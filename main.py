@@ -63,4 +63,4 @@ model.fit(
     validation_steps=validation_generator.samples // batch_size)
 
 # Save the finetuned model
-model.save('finetuned_mobilenet.h5')
+model.save('finetuned_mobilenet.keras')
