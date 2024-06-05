@@ -1,4 +1,5 @@
 import tensorflow as tf
+import tensorflowjs as tfjs
 from tensorflow.keras.applications import MobileNet
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
@@ -64,3 +65,4 @@ model.fit(
 
 # Save the finetuned model
 model.save('finetuned_mobilenet.keras')
+tfjs.converters.save_keras_model(model, 'tfjs_model')
