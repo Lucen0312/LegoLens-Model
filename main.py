@@ -63,6 +63,8 @@ model.fit(
     validation_data=validation_generator,
     validation_steps=validation_generator.samples // batch_size)
 
+print(model.input_shape)
+
 # Save the finetuned model
 model.save('finetuned_mobilenet.keras')
 tfjs.converters.save_keras_model(model, 'tfjs_model')
