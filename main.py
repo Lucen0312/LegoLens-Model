@@ -31,8 +31,8 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 # Define our example directories and parameters
 train_dir = 'data/train'
 test_dir = 'data/test'
-batch_size = 32
-epochs = 20
+batch_size = 8
+epochs = 10
 
 # Prepare data augmentation configuration
 train_datagen = ImageDataGenerator(
@@ -52,7 +52,7 @@ train_generator = train_datagen.flow_from_directory(
 validation_generator = test_datagen.flow_from_directory(
     test_dir,
     target_size=(224, 224),
-    batch_size=batch_size,
+    batch_size=3,
     class_mode='categorical')
 
 # Train the model
@@ -61,10 +61,10 @@ model.fit(
     steps_per_epoch=train_generator.samples // batch_size,
     epochs=epochs,
     validation_data=validation_generator,
-    validation_steps=validation_generator.samples // batch_size)
+    validation_steps=validation_generator.samples // 3)
 
 print(model.input_shape)
-
+tf.keras.backend.clear_session()
 # Save the finetuned model
 model.save('finetuned_mobilenet.keras')
 tfjs.converters.save_keras_model(model, 'tfjs_model')
