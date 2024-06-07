@@ -6,7 +6,7 @@ from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
 from tensorflow.keras.models import Model
 
 # Load MobileNet model
-base_model = MobileNet(weights='imagenet', include_top=False)
+base_model = MobileNet(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
 
 # Add a global spatial average pooling layer
 x = base_model.output
@@ -65,6 +65,5 @@ model.fit(
 
 print(model.input_shape)
 tf.keras.backend.clear_session()
-# Save the finetuned model
-model.save('finetuned_mobilenet.keras')
+# Save the finetuned model for tfjs
 tfjs.converters.save_keras_model(model, 'tfjs_model')
