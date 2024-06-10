@@ -52,7 +52,7 @@ history = model.fit(
     steps_per_epoch=train_generator.samples // train_generator.batch_size,
     validation_data=validation_generator,
     validation_steps=validation_generator.samples // validation_generator.batch_size,
-    epochs=50,
+    epochs=10,
     callbacks=[checkpoint, early_stopping]
 )
 
@@ -68,7 +68,7 @@ history_fine = model.fit(
     steps_per_epoch=train_generator.samples // train_generator.batch_size,
     validation_data=validation_generator,
     validation_steps=validation_generator.samples // validation_generator.batch_size,
-    epochs=50,
+    epochs=10,
     callbacks=[checkpoint, early_stopping]
 )
 
