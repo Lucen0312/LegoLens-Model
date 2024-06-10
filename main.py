@@ -11,7 +11,7 @@ base_model = VGG16(weights='imagenet', include_top=False, input_shape=(224, 224,
 x = base_model.output
 x = GlobalAveragePooling2D()(x)
 x = Dense(1024, activation='relu')(x)
-predictions = Dense(1, activation='sigmoid')(x) 
+predictions = Dense(1, activation='sigmoid')(x)
 
 model = Model(inputs=base_model.input, outputs=predictions)
 
@@ -32,17 +32,16 @@ validation_datagen = ImageDataGenerator(rescale=1./255)
 train_generator = train_datagen.flow_from_directory(
     'data/train',
     target_size=(224, 224),
-    batch_size=8, #24
+    batch_size=8,
     class_mode='binary'
 )
 
 validation_generator = validation_datagen.flow_from_directory(
     'data/validation',
     target_size=(224, 224),
-    batch_size=2, #6
+    batch_size=2,
     class_mode='binary'
 )
-
 
 checkpoint = ModelCheckpoint('best_model.h5', monitor='val_loss', save_best_only=True, mode='min')
 early_stopping = EarlyStopping(monitor='val_loss', patience=10, mode='min')
@@ -56,9 +55,7 @@ history = model.fit(
     callbacks=[checkpoint, early_stopping]
 )
 
-for layer in base_model.layers[:15]:
-    layer.trainable = False
-for layer in base_model.layers[15:]:
+for layer in base_model.layers:
     layer.trainable = True
 
 model.compile(optimizer=Adam(learning_rate=0.0001), loss='binary_crossentropy', metrics=['accuracy'])
@@ -72,5 +69,4 @@ history_fine = model.fit(
     callbacks=[checkpoint, early_stopping]
 )
 
-# Do this on linux, mac or wsl to convert the model to tensorflowjs format
-# tensorflowjs_converter --input_format=keras best_model.h5 tfjs_model
+model.save('best_model.h5')
