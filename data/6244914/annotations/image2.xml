@@ -1,0 +1,26 @@
+<annotation>
+	<folder>train</folder>
+	<filename>image2.jpg</filename>
+	<path>C:\Users\Lucen\LegoLens-Model\data\6244914\train\image2.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>512</width>
+		<height>512</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>6244914</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>80</xmin>
+			<ymin>152</ymin>
+			<xmax>371</xmax>
+			<ymax>341</ymax>
+		</bndbox>
+	</object>
+</annotation>
