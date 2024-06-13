@@ -1,5 +1,5 @@
 import os
-os.environ["KERAS_BACKEND"] = "jax"  # @param ["tensorflow", "jax", "torch"]
+os.environ["KERAS_BACKEND"] = "tensorflow"  # @param ["tensorflow", "jax", "torch"]
 
 import math
 from tensorflow import data as tf_data
@@ -74,8 +74,8 @@ def load_dataset(data_dir):
         image = load_image(image_path)
         print(f"Loaded image shape: {image.shape}")  # Print the shape of the loaded image
         images.append(image)
-        bbox.append(item['object']['bndbox'])
-        labels.append(item['object']['name'])
+        bbox.append(np.array(item['object']['bndbox'], dtype=np.int32))  # Ensure bounding boxes are integers
+        labels.append(np.array(item['object']['name'], dtype=np.int32))  # Ensure labels are integers
 
     images = np.stack(images, axis=0)  # Convert list of images to 4D numpy array
     ds = tf.data.Dataset.from_tensor_slices((images, {'boxes': bbox, 'classes': labels}))
@@ -91,6 +91,7 @@ eval_ds = load_dataset(data_dir)
 # Define augmentation layers
 augmenters = [
     keras_cv.layers.RandomFlip(mode="horizontal", bounding_box_format="xyxy"),
+    keras_cv.layers.RandomRotation(factor=0.15),  # Rotate the image by +/- 15 degrees
 ]
 
 def create_augmenter_fn(augmenters):
@@ -158,4 +159,5 @@ model.fit(
     steps_per_epoch=math.ceil(len(train_ds) / BATCH_SIZE)
 )
 
-model.save(model_path)
+# Save the full model to a new .h5 file
+model.save('full_yolomodel', save_format='tf')
