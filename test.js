@@ -4,16 +4,14 @@ const fs = require('fs');
 const parseString = require('xml2js').parseString;
 const jpeg = require('jpeg-js');
 global.fetch = require('node-fetch');
-fs.existsSync('tfjs_model/model.json') // should return true
+fs.existsSync('tfjs_model/model.json')
 describe('YOLO Model', function() {
   let model;
   let trainData;
 
   before(async function() {
-    // Load the model
     model = await tf.loadLayersModel('tfjs_model/model.json');
 
-    // Load the training data
     const imageFiles = fs.readdirSync('data/train');
     const xmlFiles = fs.readdirSync('data/annotations');
 
@@ -29,7 +27,6 @@ describe('YOLO Model', function() {
           result = res;
       });
 
-      // Extract bounding box information
       const bbox = result.annotation.object[0].bndbox[0];
       const xmin = parseInt(bbox.xmin[0]);
       const ymin = parseInt(bbox.ymin[0]);

@@ -14,11 +14,11 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
-BATCH_SIZE = 1  # Set your batch size
-class_mapping = {'6244914': 0}  # Define your class mapping
+BATCH_SIZE = 1 
+class_mapping = {'6244914': 0} 
 
 def display_image_with_boxes(image, boxes):
-    image = tf.squeeze(image, axis=0)  # Remove batch dimension
+    image = tf.squeeze(image, axis=0)
     image = tf.cast(image, tf.float32) / 255.0
     if tf.rank(boxes) != 2 or tf.shape(boxes)[1] != 4:
         print("No bounding boxes to display.")
@@ -31,7 +31,6 @@ def display_image_with_boxes(image, boxes):
 
     image_height, image_width, _ = image.shape
     for box in boxes:
-        # Convert bounding box coordinates to pixel values
         xmin, ymin, xmax, ymax = box
         xmin *= image_width
         xmax *= image_width
@@ -51,7 +50,7 @@ def parse_xml(xml_file):
 
     for member in root.findall('object'):
         label = member.find('name').text
-        labels.append(class_mapping[label])  # Convert label to integer
+        labels.append(class_mapping[label])
         bbox = member.find('bndbox')
         bbox = [int(bbox.find('xmin').text), int(bbox.find('ymin').text), int(bbox.find('xmax').text), int(bbox.find('ymax').text)]
         boxes.append(bbox)
@@ -72,26 +71,26 @@ def load_dataset(data_dir):
     for item in data:
         image_path = os.path.join(data_dir, 'train', item['path'])
         image = load_image(image_path)
-        print(f"Loaded image shape: {image.shape}")  # Print the shape of the loaded image
+        print(f"Loaded image shape: {image.shape}")
         images.append(image)
-        bbox.append(np.array(item['object']['bndbox'], dtype=np.int32))  # Ensure bounding boxes are integers
-        labels.append(np.array(item['object']['name'], dtype=np.int32))  # Ensure labels are integers
+        bbox.append(np.array(item['object']['bndbox'], dtype=np.int32))
+        labels.append(np.array(item['object']['name'], dtype=np.int32))
 
     images = np.stack(images, axis=0)  # Convert list of images to 4D numpy array
     ds = tf.data.Dataset.from_tensor_slices((images, {'boxes': bbox, 'classes': labels}))
     return ds
 
-data_dir = 'data/6244914'  # Replace with the path to your data directory
+data_dir = 'data/6244914'
 train_ds = load_dataset(data_dir)
 eval_ds = load_dataset(data_dir)
 
-# Shuffle, batch, and prefetch the dataset
+# Shuffle, batch, and prefetch the dataset (Not using because of complications for now)
 #train_ds = train_ds.shuffle(BATCH_SIZE * 4)
 
 # Define augmentation layers
 augmenters = [
     keras_cv.layers.RandomFlip(mode="horizontal", bounding_box_format="xyxy"),
-    keras_cv.layers.RandomRotation(factor=0.15),  # Rotate the image by +/- 15 degrees
+    keras_cv.layers.RandomRotation(factor=0.15),
 ]
 
 def create_augmenter_fn(augmenters):
@@ -116,22 +115,19 @@ def dict_to_tuple(images, bounding_boxes):
             dense_bounding_boxes = bounding_box.to_dense(bounding_boxes_dict, max_boxes=32)
         except KeyError as e:
             print(f"KeyError: {e}")
-            print(f"bounding_boxes: {bounding_boxes}")  # Print the bounding_boxes dictionary
+            print(f"bounding_boxes: {bounding_boxes}")
             dense_bounding_boxes = None
     return images, dense_bounding_boxes
 
-# No need to resize images in the dataset
 train_ds = train_ds.map(dict_to_tuple, num_parallel_calls=tf.data.AUTOTUNE)
 eval_ds = eval_ds.map(dict_to_tuple, num_parallel_calls=tf.data.AUTOTUNE)
 
-# Prefetch the data for better performance
 train_ds = train_ds.batch(BATCH_SIZE, drop_remainder=True).prefetch(tf.data.AUTOTUNE)
 eval_ds = eval_ds.batch(BATCH_SIZE, drop_remainder=True).prefetch(tf.data.AUTOTUNE)
 
 
 
 base_lr = 0.005
-# including a global_clipnorm is extremely important in object detection tasks
 optimizer = keras.optimizers.SGD(
     learning_rate=base_lr, momentum=0.9, global_clipnorm=10.0
 )
