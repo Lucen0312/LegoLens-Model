@@ -1,5 +1,7 @@
 # LegoLens-Model
 Had to create this again due to merge conflicts from PC and macbook.
+Github Copilot was used in limited way in terms of debugging.
+AI was only used for some errors that weren't able to be found online.
 ## Process of creating this model
 Used mobilenet to do image recognition but discovered that object detection is far better than image classification for my usage.
 Used Tensorflow's Object Detection API but discovered that it was deprecated.
