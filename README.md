@@ -11,7 +11,7 @@ Used KerasCV and Keras 3 with YOLOv8 which are both modern solutions for object 
 Dataset were annotated using labelImg which annotates images by PascalVOC format.
 
 ## To-do
-- [] Use ultralytics instead of Keras for fine tuning which is YOLOv8's official provider.
-- [] Add 4 more classes to be proven as POC with class of 5. (Proof of Concept)
-- [] Increase data with 50 images per set and apply data augmentation.
-- [] Increase epoch to 30 from 10 for higher accuracy.
+- [ ] Use ultralytics instead of Keras for fine tuning which is YOLOv8's official provider.
+- [ ] Add 4 more classes to be proven as POC with class of 5. (Proof of Concept)
+- [ ] Increase data with 50 images per set and apply data augmentation.
+- [ ] Increase epoch to 30 from 10 for higher accuracy.
