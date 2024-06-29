@@ -1,0 +1,73 @@
+# YOLOv8n Model Configuration
+
+# Dataset configuration
+train: /path/to/train.txt  # Path to the training data list file
+val: /path/to/val.txt      # Path to the validation data list file (optional)
+test: /path/to/test.txt    # Path to the test data list file (optional)
+
+# Number of classes in your dataset
+nc: 80                     # Number of classes (e.g., 80 for COCO)
+
+# Model architecture
+depth_multiple: 0.33       # Model depth multiple
+width_multiple: 0.50       # Model width multiple
+
+# Input image size for training
+img_size: 416              # Input image size (width, height) for training
+
+# Training hyperparameters
+epochs: 10                 # Number of epochs to train
+batch_size: 16             # Batch size for training
+learning_rate: 0.001       # Initial learning rate
+momentum: 0.9              # Momentum for SGD optimizer
+weight_decay: 0.0005       # Weight decay (L2 penalty) for regularization
+
+# Optimizer settings
+optimizer:
+  type: sgd                # Optimizer type (sgd, adam, etc.)
+  lr0: 0.001               # Initial learning rate (ignored if auto_lr_find is True)
+  momentum: 0.9            # Momentum for SGD optimizer
+  weight_decay: 0.0005     # Weight decay (L2 penalty) for regularization
+  auto_lr_find: True       # Automatically find the best LR
+
+# Augmentation settings
+augment: True              # Enable data augmentation
+flipud: 0.5                # Probability of flip up-down augmentation
+fliplr: 0.5                # Probability of flip left-right augmentation
+mosaic: 1                  # Probability of mosaic augmentation
+mixup: 0                   # Probability of mixup augmentation
+
+# Save checkpoints during training
+save_dir: runs/train8      # Directory to save training outputs (checkpoints, logs, etc.)
+save_period: 1             # Save a checkpoint every N epochs
+
+# Pretrained model weights (if any)
+pretrained_weights: null   # Path to pretrained weights (null for none)
+
+# Set to True for transfer learning from pretrained weights
+transfer: False            # Transfer learning flag
+
+# Advanced settings
+workers: 8                 # Number of data loading workers (adjust based on CPU cores)
+adam_beta1: 0.9            # Beta1 for Adam optimizer
+adam_beta2: 0.999          # Beta2 for Adam optimizer
+iou_type: giou             # IoU type (iou, giou, diou, ciou)
+
+# Dataset settings (optional)
+#dataset:
+#  img_type: png           # Image type (png, jpg, etc.)
+#  cache_images: True      # Cache images for faster training
+
+# Advanced model settings (optional)
+#model:
+#  scale_x_y: 1.05         # Scale x, y predictions by this value
+#  yolo_version: v4        # YOLO version (v4, v5, etc.)
+
+# Print settings (optional)
+#print:
+#  print_interval: 100     # Print training progress every N batches
+
+# Test settings (optional)
+#test:
+#  batch_size: 16          # Batch size for testing
+#  save_json: False        # Save detections in COCO json format
